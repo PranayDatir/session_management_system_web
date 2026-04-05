@@ -47,3 +47,9 @@
     </div>
     }
 </div>
+<div class="mt-4 flex justify-center">
+@if(pageSize() < sessionService.sessionsListByBatch().length){ <pagination
+  [totalItems]="sessionService.sessionsListByBatch().length" [pageSize]="pageSize()" [currentPage]="currentPage()"
+  (pageChange)="onPageChange($event)">
+  </pagination>}
+</div>

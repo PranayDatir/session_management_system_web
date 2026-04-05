@@ -10,11 +10,13 @@ import { Http } from './http';
 export class BatchService {
   http = inject(Http);
   batchData = signal<IBatch[]>([]);
+  allBatchData = signal<IBatch[]>([]);
   getBatches() {
     this.http.get<IApiResponse<IBatch[]>>(ApiRoutes.BATCHES).subscribe({
       next: (res: IApiResponse<IBatch[]>) => {
         if (res.result) {
           this.batchData.set(res.data!);
+          this.allBatchData.set(res.data!);
         }
       },
       error: (err) => {

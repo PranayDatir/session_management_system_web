@@ -45,6 +45,7 @@ export class BatchEnrollmentService {
   
   
   enrollmentList = signal<IBatchEnrollment[]>([]);
+  allEnrollmentList = signal<IBatchEnrollment[]>([]);
   enrollmentListByCandidateID = signal<IBatchEnrollment[]>([]);
 
   getEnrollments() {
@@ -52,6 +53,7 @@ export class BatchEnrollmentService {
       next: (res: IApiResponse<IBatchEnrollment[]>) => {
         if (res.result) {
           this.enrollmentList.set(res.data!);
+          this.allEnrollmentList.set(res.data!);
         }
       },
       error: (err) => {

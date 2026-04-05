@@ -18,18 +18,18 @@ export const routes: Routes = [
         component: Layout,
         children: [
             { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-            { path: 'dashboard',component:Dashboard ,pathMatch: 'full'},
-            { path: 'batches', component: Batches, pathMatch: 'full' },
-            { path: 'candidate', component: Candidate, pathMatch: 'full' },
-            { path: 'batchEnrollments', component: BatchEnrollments, pathMatch: 'full'},
+            { path: 'dashboard', pathMatch: 'full', loadComponent: () => import('./pages/dashboard/dashboard').then(m => m.Dashboard) },
+            { path: 'batches', pathMatch: 'full', loadComponent: () => import('./pages/batches/batches').then(m => m.Batches) },
+            { path: 'candidate', pathMatch: 'full', loadComponent: () => import('./pages/candidate/candidate').then(m => m.Candidate) },
+            { path: 'batchEnrollments', pathMatch: 'full', loadComponent: () => import('./pages/batch-enrollments/batch-enrollments').then(m => m.BatchEnrollments) },
             {
-                path: 'batchSessions', component: Sessions, children: [
-                    {path: '', redirectTo: 'batchList', pathMatch:'full'},
-                    { path: 'batchList', component: Batchlist, pathMatch: 'full' },
-                    { path: 'recording/:batchId', component: Recordings, pathMatch: 'full' },
+                path: 'batchSessions',loadComponent: () => import('./pages/sessions/sessions').then(m => m.Sessions), children: [
+                    { path: '', redirectTo: 'batchList', pathMatch: 'full' },
+                    { path: 'batchList',  pathMatch: 'full', loadComponent: () => import('./pages/batchlist/batchlist').then(m => m.Batchlist) },
+                    { path: 'recording/:batchId', pathMatch: 'full', loadComponent: () => import('./pages/recordings/recordings').then(m => m.Recordings) },
                 ]
             },
-            { path: 'batchSessions/:batchId', component: Sessions, pathMatch: 'full' },
+            { path: 'batchSessions/:batchId', pathMatch: 'full', loadComponent: () => import('./pages/sessions/sessions').then(m => m.Sessions) },
 
         ],
         canActivate: [authGuard]

@@ -1,20 +1,20 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Sessionservice } from '../../core/services/sessionservice';
 import { CommonModule } from '@angular/common';
 import { faArrowRight, faCalendarDay, faClock, faEdit, faPlayCircle, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 import { MatDialog } from '@angular/material/dialog';
-// import { Videoframe } from '../videoframe/videoframe';
+import { Videoframe } from '../videoframe/videoframe';
 import { IBatchSession } from '../../core/models/BatchSession';
-import { Auth } from '../../core/services/auth';
 import { Authuser } from '../../core/services/authuser';
 import { Addeditsession } from '../addeditsession/addeditsession';
 import { Deletesession } from '../deletesession/deletesession';
+import { PaginationComponent } from "../../shared/components/pagination/pagination";
 
 @Component({
   selector: 'app-recordings',
-  imports: [CommonModule, FontAwesomeModule],
+  imports: [CommonModule, FontAwesomeModule, PaginationComponent],
   templateUrl: './recordings.html',
   styleUrl: './recordings.css',
 })
@@ -26,12 +26,13 @@ export class Recordings implements OnInit {
   batchId = this.activeRoute.snapshot.params['batchId'];
   faArrowRight = faArrowRight;
   faPlayCircle = faPlayCircle;
-  faCalendarDay= faCalendarDay;
-  faClock= faClock;
+  faCalendarDay = faCalendarDay;
+  faClock = faClock;
   faEdit = faEdit;
   faTrash = faTrash;
 
-
+  currentPage = signal(1);
+  pageSize = signal(5);
   constructor(public dialog: MatDialog) { }
   batch: any;
   ngOnInit() {
@@ -47,41 +48,51 @@ export class Recordings implements OnInit {
   }
 
   viewVideo(session?: IBatchSession): void {
-    // this.dialog.open(Videoframe, {
-    //   data: session,
-    //   width: '60vw',
-    //   height: '90vh',
-    //   maxWidth: '60vw',
-    //   maxHeight: '90vh'
-    // });
+    this.dialog.open(Videoframe, {
+      data: session,
+      width: '60vw',
+      height: '90vh',
+      maxWidth: '60vw',
+      maxHeight: '90vh'
+    });
   }
 
   addEditSession(session: IBatchSession) {
-      console.log('Editing session:', session);
-      const dialogRef = this.dialog.open(Addeditsession, {
-        data: session ? session : undefined,
-        width: '60%',
-        minHeight: '60%',
-        enterAnimationDuration: '100ms',
-        exitAnimationDuration: '100ms'
-      });
-  
-      dialogRef.afterClosed().subscribe((result: boolean) => {
-        result ? this.sessionService.getSessions() : null;
-      });
-    }
+    console.log('Editing session:', session);
+    const dialogRef = this.dialog.open(Addeditsession, {
+      data: session ? session : undefined,
+      width: '60%',
+      minHeight: '60%',
+      enterAnimationDuration: '100ms',
+      exitAnimationDuration: '100ms'
+    });
 
-    deleteSession(item: IBatchSession) {
-      const dialogRef = this.dialog.open(Deletesession, {
-        data: item ? item : undefined,
-        width: '60%',
-        minHeight: '60%',
-        enterAnimationDuration: '100ms',
-        exitAnimationDuration: '100ms'
-      });
-  
-      dialogRef.afterClosed().subscribe((result: boolean) => {
-        result ? this.sessionService.getSessions() : null;
-      });
-    }
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      result ? this.sessionService.getSessions() : null;
+    });
+  }
+
+  deleteSession(item: IBatchSession) {
+    const dialogRef = this.dialog.open(Deletesession, {
+      data: item ? item : undefined,
+      width: '60%',
+      minHeight: '60%',
+      enterAnimationDuration: '100ms',
+      exitAnimationDuration: '100ms'
+    });
+
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      result ? this.sessionService.getSessions() : null;
+    });
+  }
+
+   paginatedSessions = computed(() => {
+    const startIndex = (this.currentPage() - 1) * this.pageSize();
+    const endIndex = startIndex + this.pageSize();
+    return this.sessionService.sessionsListByBatch().slice(startIndex, endIndex);
+  });
+
+   onPageChange(page: number) {
+    this.currentPage.set(page);
+  }
 }
