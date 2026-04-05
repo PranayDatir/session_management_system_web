@@ -10,6 +10,7 @@ import { Addeditbatch } from '../addeditbatch/addeditbatch';
 import { Deletebatchconfirmation } from '../deletebatchconfirmation/deletebatchconfirmation';
 import { Router } from '@angular/router';
 import { PaginationComponent } from "../../shared/components/pagination/pagination";
+import { Search } from '../../core/services/search';
 
 @Component({
   selector: 'app-batches',
@@ -38,10 +39,13 @@ export class Batches implements OnInit {
   router = inject(Router);
 
   ngOnInit() {
-    this.batcheService.getBatches()
+    this.batcheService.getBatches();
+    this.searchService.search$.subscribe(searchTerm => {
+      this.applySearch(searchTerm ?? '');
+    });
   }
 
-  constructor(private dialog: MatDialog) {
+  constructor(private dialog: MatDialog, private searchService: Search) {
 
   }
 
@@ -104,6 +108,24 @@ export class Batches implements OnInit {
 
   onFilterChange(event: any) {
     this.batcheService.filterBatches(event);
+    this.currentPage.set(1);
+  }
+
+  applySearch(searchTerm: string) {
+    console.log('Search Term 01:', searchTerm);
+    const allBatches = this.batcheService.allBatchData();
+
+    if (!searchTerm.trim()) {
+     this.batcheService.batchData.set(allBatches);
+      return;
+    }
+
+    const filtered = allBatches.filter(batch =>
+      batch.batchName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      batch.description?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    this.batcheService.batchData.set(filtered);
     this.currentPage.set(1);
   }
 }

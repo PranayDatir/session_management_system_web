@@ -6,10 +6,13 @@ import { Authuser } from '../../core/services/authuser';
 import { MatDialog } from '@angular/material/dialog';
 import { Profile } from '../profile/profile';
 import { CommonModule } from '@angular/common';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
+import { Search } from '../../core/services/search';
 
 @Component({
   selector: 'app-layout',
-  imports: [RouterLink, RouterOutlet, RouterLinkActive, FontAwesomeModule, CommonModule],
+  imports: [RouterLink, RouterOutlet, RouterLinkActive, FontAwesomeModule, CommonModule, ReactiveFormsModule],
   templateUrl: './layout.html',
   styleUrl: './layout.css',
 })
@@ -27,6 +30,8 @@ export class Layout {
   faSearch = faSearch;
   faBell = faBell;
 
+  searchControl = new FormControl('');
+
   logoUrl: string = '/assets/learning_partner_logo.jpg'
 
   logout() {
@@ -36,9 +41,18 @@ export class Layout {
   }
 
   authUser = inject(Authuser);
+  searchService = inject(Search);
 
   ngOnInit() {
-    console.log('authUser.user ---> ', this.authUser.user);
+    this.searchControl.valueChanges
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        // takeUntil(this.searchService.destroyBatchSearch$)
+      )
+      .subscribe((searchTerm) => {
+        this.searchService.updateSearch(searchTerm ?? '');
+      });
   }
 
   constructor(public dialog: MatDialog) {

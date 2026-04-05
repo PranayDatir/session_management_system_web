@@ -11,12 +11,14 @@ export class CandidateService {
   http = inject(Http);
 
   candidatesList = signal<IUser[]>([]);
+  allCandidatesList = signal<IUser[]>([]);
 
   getCandidates() {
     const http = this.http.get<IApiResponse<IUser[]>>(ApiRoutes.CANDIDATES).subscribe({
       next: (res: IApiResponse<IUser[]>) => {
         if (res.result) {
           this.candidatesList.set(res.data!);
+          this.allCandidatesList.set(res.data!);
         }
       },
       error: (err) => {

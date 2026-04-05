@@ -10,6 +10,8 @@ import { Addeditcandidate } from '../addeditcandidate/addeditcandidate';
 import { Deletecandidate } from '../deletecandidate/deletecandidate';
 import { PaginationComponent } from "../../shared/components/pagination/pagination";
 import { Authuser } from '../../core/services/authuser';
+import { Search } from '../../core/services/search';
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'app-candidate',
@@ -17,7 +19,7 @@ import { Authuser } from '../../core/services/authuser';
     templateUrl: './candidate.html',
     styleUrl: './candidate.css',
 })
-export class Candidate implements OnInit {
+export class Candidate implements OnInit, OnDestroy {
 
     faHashtag = faHashtag;
     faUser = faUser;
@@ -35,12 +37,19 @@ export class Candidate implements OnInit {
     faPlus = faPlus;
     faTag = faTag;
     faCalendar = faCalendar;
-    candidateService = inject(CandidateService);
 
+    candidateService = inject(CandidateService);
     authUser = inject(Authuser);
+    searchService = inject(Search);
+    currentPage = signal(1);
+    pageSize = signal(5);
+    private destroy$ = new Subject<void>();
 
     ngOnInit() {
         this.candidateService.getCandidates();
+        this.searchService.search$.subscribe(searchTerm => {
+            this.applySearch(searchTerm ?? '');
+        });
     }
     constructor(private dialog: MatDialog) { }
 
@@ -71,9 +80,6 @@ export class Candidate implements OnInit {
         });
     }
 
-    currentPage = signal(1);
-    pageSize = signal(5);
-
     paginatedCandidateList = computed(() => {
         const startIndex = (this.currentPage() - 1) * this.pageSize();
         const endIndex = startIndex + this.pageSize();
@@ -82,6 +88,29 @@ export class Candidate implements OnInit {
 
     onPageChange(page: number) {
         this.currentPage.set(page);
+    }
+
+    applySearch(value: string) {
+        const allCandidates = this.candidateService.allCandidatesList();
+
+        if (!value.trim()) {
+            this.candidateService.candidatesList.set(allCandidates);
+            return;
+        }
+
+        const filtered = allCandidates.filter(candidate =>
+            candidate.fullName.toLowerCase().includes(value.toLowerCase()) ||
+            candidate.email?.toLowerCase().includes(value.toLowerCase()) ||
+            candidate.mobileNumber?.toLowerCase().includes(value.toLowerCase())
+        );
+
+        this.candidateService.candidatesList.set(filtered);
+        this.currentPage.set(1);
+    }
+
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 
 }

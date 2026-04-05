@@ -53,7 +53,7 @@
                 <div class="relative w-full max-w-xl">
                     <input type="text" placeholder="Search batches, sessions, candidates..." class="w-full pl-12 pr-4 py-2 rounded-full border border-slate-200
                        focus:outline-none focus:ring-2 focus:ring-[#003B73]/30
-                       focus:border-[#003B73] text-sm shadow-sm transition-all" />
+                       focus:border-[#003B73] text-sm shadow-sm transition-all" [formControl]="searchControl" />
 
                     <!-- Search Icon -->
                     <fa-icon [icon]="faSearch" class="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2"></fa-icon> 

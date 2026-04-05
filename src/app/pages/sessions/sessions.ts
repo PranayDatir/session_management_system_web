@@ -5,15 +5,14 @@ import { faEdit, faTrashAlt, faPlus, faEye, faHashtag, faTag, faAlignLeft, faCal
 import { IBatchSession } from '../../core/models/BatchSession';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Addeditsession } from '../addeditsession/addeditsession';
-import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { BatchService } from '../../core/services/batches';
 import { Authuser } from '../../core/services/authuser';
-import { BehaviorSubject, debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-sessions',
-  imports: [FontAwesomeModule, MatDialogModule,  RouterOutlet, ReactiveFormsModule],
+  imports: [FontAwesomeModule, MatDialogModule, RouterOutlet, ReactiveFormsModule],
   templateUrl: './sessions.html',
   styleUrl: './sessions.css',
 })
@@ -33,29 +32,19 @@ export class Sessions {
   faSearch = faSearch;
   faTimesCircle = faTimesCircle;
   faCheckCircle = faCheckCircle;
+  
   sessionService = inject(Sessionservice);
   batchService = inject(BatchService);
   activeRoute = inject(ActivatedRoute);
-  
+
   constructor(public dialog: MatDialog) { }
-  
+
   batchId = this.activeRoute.snapshot.params['batchId'];
   route = this.activeRoute.snapshot.routeConfig;
-  authUser = inject(Authuser);
-  searchControl = new FormControl('');
-  private destroySearch$ = new Subject<void>();
-  searchTerm$ = new BehaviorSubject<string>('');
+  authUser = inject(Authuser); 
+
   ngOnInit() {
-   this.searchControl.valueChanges
-      .pipe(
-        debounceTime(300),
-        distinctUntilChanged(),
-        takeUntil(this.destroySearch$)
-      )
-      .subscribe((searchTerm) => {
-        this.sessionService.setSearchTerm(searchTerm ?? '');
-      });
-  } 
+  }
 
   addEditSession(session?: IBatchSession) {
     const dialogRef = this.dialog.open(Addeditsession, {
@@ -71,6 +60,5 @@ export class Sessions {
     });
 
   }
-
 
 }
