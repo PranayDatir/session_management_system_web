@@ -1,0 +1,28 @@
+<div class="grid grid-cols-4 gap-5">
+  @if(authUser.user.role === 'Super Admin'){
+  @for (item of batchService.batchData(); track $index) {
+  <div [routerLink]="`/layout/batchSessions/recording/${item._id}`" class="inline-flex items-center justify-center h-16
+                px-4 py-1.5
+                rounded-md
+                bg-orange-100
+                border border-orange-800">
+    <span class="text-sm font-semibold text-orange-500">
+      {{ item.batchName }}
+    </span>
+  </div>
+  }
+  }
+  @else if(authUser.user.role === 'Candidate') {
+  @for (item of batchEnrollmentService.enrollmentListByCandidateID(); track $index) {
+  <div [routerLink]="`/layout/batchSessions/recording/${item.batchId._id}`" [state]="{ batch: item }" class="inline-flex items-center justify-center h-16
+                px-4 py-1.5
+                rounded-md
+                bg-orange-100
+                border border-orange-800">
+    <span class="text-sm font-semibold text-orange-500">
+      {{ item.batchId.batchName }}
+    </span>
+  </div>
+  }
+  }
+</div>

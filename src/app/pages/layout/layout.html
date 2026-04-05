@@ -1,0 +1,91 @@
+<div class="flex h-screen bg-slate-100 overflow-hidden">
+
+    <aside class="w-64 bg-[#0A2540] text-white hidden md:flex flex-col shadow-xl">
+
+        <div class="flex items-center bg-gray-200 p-2 m-3 rounded-full  gap-2">
+            <img [src]="logoUrl" alt="Learning Partner's" class="h-10 w-10 mix-blend-multiply">
+            <b class="text-[#003B73]">Learning <br> Partner's</b>
+        </div>
+        <hr class="border-slate-700">
+        <nav class="flex-1 px-4 space-y-2 mt-10">
+            <a routerLink="dashboard" routerLinkActive="bg-[#356fa6] text-[#003B73]"
+                class="flex items-center gap-3 px-4 py-3 text-white hover:bg-[#356fa6] rounded-xl font-medium transition-all">
+                <fa-icon [icon]="faHome"></fa-icon> Home
+            </a>
+            @if(authUser.user.role === 'Super Admin'){
+            <a routerLink="batches" routerLinkActive="bg-[#356fa6] text-[#003B73]"
+                class="flex items-center gap-3 px-4 py-3 text-white hover:bg-[#356fa6] rounded-xl font-medium transition-all">
+                <fa-icon [icon]="faLayerGroup"></fa-icon> Batches
+            </a>
+            <a routerLink="candidate" routerLinkActive="bg-[#356fa6] text-[#003B73]"
+                class="flex items-center gap-3 px-4 py-3 text-white hover:bg-[#356fa6] rounded-xl font-medium transition-all">
+                <fa-icon [icon]="faUsers"></fa-icon> Candidates
+            </a>
+            <a routerLink="batchEnrollments" routerLinkActive="bg-[#356fa6] text-[#003B73]"
+                class="flex items-center gap-3 px-4 py-3 text-white hover:bg-[#356fa6] rounded-xl font-medium transition-all">
+                <fa-icon [icon]="faUserPlus"></fa-icon>Batch Enrollments
+            </a>
+            }
+            <a routerLink="batchSessions" routerLinkActive="bg-[#356fa6] text-[#003B73]"
+                class="flex items-center gap-3 px-4 py-3 text-white hover:bg-[#356fa6]  rounded-xl font-medium transition-all">
+                <fa-icon [icon]="faCalendarDay"></fa-icon>Batch Sessions
+            </a>
+        </nav>
+
+        <div class="px-4 py-5 border-t border-slate-700">
+            <button (click)="logout()"
+                class="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-red-400 hover:bg-red-500 hover:text-white hover:cursor-pointer transition-all font-semibold">
+                <fa-icon [icon]="faSignOutAlt"></fa-icon>
+                Logout
+            </button>
+        </div>
+
+    </aside>
+    <div class="flex-1 flex flex-col h-screen overflow-hidden relative">
+
+        <header class="bg-white h-20 flex items-center px-8 border-b border-slate-200/60 z-10 shadow-sm">
+
+            <!-- Left Spacer (keeps search perfectly centered) -->
+            <div class="flex-1"></div>
+
+            <!-- Center Search Box -->
+            <div class="flex-[2] flex justify-center">
+                <div class="relative w-full max-w-xl">
+                    <input type="text" placeholder="Search batches, sessions, candidates..." class="w-full pl-12 pr-4 py-2 rounded-full border border-slate-200
+                       focus:outline-none focus:ring-2 focus:ring-[#003B73]/30
+                       focus:border-[#003B73] text-sm shadow-sm transition-all" />
+
+                    <!-- Search Icon -->
+                    <fa-icon [icon]="faSearch" class="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2"></fa-icon> 
+                </div>
+            </div>
+
+            <!-- Right Profile Section -->
+            <div class="flex-1 flex justify-end items-center gap-6">
+                <div class="flex items-center gap-3 group">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-sm font-bold text-slate-700 group-hover:text-[#003B73] transition-colors">
+                            {{ authUser.user.fullName }}
+                        </p>
+                        <p class="text-xs text-slate-400">{{ authUser.user.role }}</p>
+                    </div>
+                    <div (click)="openProfile()"
+                        class="w-11 h-11 rounded-full bg-[#003B73] p-1 shadow-md group-hover:scale-105 transition-transform cursor-pointer">
+                        <div
+                            class="w-full h-full rounded-full bg-white flex items-center justify-center text-[#003B73] font-bold text-2xl">
+                            {{ authUser.user.fullName[0] | uppercase }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </header>
+
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto bg-slate-150">
+            <router-outlet></router-outlet>
+        </main>
+    </div>
+
+</div>

@@ -1,0 +1,28 @@
+<div class="fixed bottom-5 right-5 z-[9999] space-y-4">
+    @for (item of notifications; track $index) {
+    <div [ngClass]="item.type"
+        class="flex w-full max-w-sm overflow-hidden bg-white rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
+        <div class="p-4 w-full">
+            <div class="flex items-start">
+
+                <div class="flex-shrink-0">
+                    <fa-icon [icon]="faCheckCircle" class="text-green-500 text-xl" [ngClass]="item.type"></fa-icon>
+                </div>
+
+                <div class="ml-3 w-0 flex-1 pt-0.5">
+                    <p class="text-sm font-semibold text-gray-900">{{item.message}}</p>
+                </div>
+
+                <div class="ml-4 flex flex-shrink-0">
+                    <button type="button"
+                        class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-600 focus:outline-none">
+                        <span class="sr-only">Close</span>
+                        <fa-icon [icon]="faTimes" class="text-lg" [ngClass]="item.type"></fa-icon>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    }
+</div>

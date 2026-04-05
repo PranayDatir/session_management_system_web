@@ -1,0 +1,49 @@
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    @for(item of sessionService.sessionsListByBatch(); track $index){
+    <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 flex flex-col group">
+        <div (click)="viewVideo(item)" class="relative aspect-video overflow-hidden bg-black">
+            <img [src]="getYoutubeThumbnail(item.youtubeVideoId)" [alt]="item.topicName"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+            <div
+                class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-colors">
+                <fa-icon class="text-white text-5xl opacity-80" [icon]="faPlayCircle"></fa-icon>
+            </div>
+        </div>
+
+        <div class="p-4 flex-1 card-orange">
+            <h3 class="font-bold text-gray-800 leading-snug mb-1 line-clamp-1">{{item.topicName}}</h3>
+            <p class="text-xs text-gray-600 line-clamp-2 mb-4">{{item.topicDescription}}</p>
+
+            <div class="flex items-center justify-between text-[11px] text-gray-500 space-x-4">
+                <div class="flex items-center">
+                    <fa-icon [icon]="faClock"></fa-icon> {{item.durationInMinutes}} Mins
+                </div>
+                <div class="flex items-center">
+                    <fa-icon [icon]="faCalendarDay"></fa-icon> {{item.sessionDate | date: 'MMM d, y'}}
+                </div>
+            </div>
+        </div>
+
+        <div class="p-3 bg-white border-t border-gray-100 flex space-x-2">
+            @if(authUser.user.role === 'Candidate'){
+            <button (click)="viewVideo(item)"
+                class="w-full bg-[#003B73] text-white py-2 rounded-lg text-sm font-semibold hover:brightness-90 transition shadow-sm">
+                Watch Recording
+            </button>
+            }
+            @else if (authUser.user.role === 'Super Admin') {
+            <button (click)="addEditSession(item)"
+                class="w-full bg-orange-500 text-white py-2 rounded-lg text-sm font-semibold hover:brightness-90 transition shadow-sm">
+                <fa-icon [icon]="faEdit"></fa-icon>
+                 Recording
+            </button>
+            <button (click)="deleteSession(item)"
+                class="w-full bg-red-500 text-white py-2 rounded-lg text-sm font-semibold hover:brightness-90 transition shadow-sm">
+                <fa-icon [icon]="faTrash"></fa-icon>
+                Recording
+            </button>
+            }
+        </div>
+    </div>
+    }
+</div>

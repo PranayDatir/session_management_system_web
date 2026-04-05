@@ -1,0 +1,105 @@
+<div class="min-h-screen bg-slate-150 p-6 space-y-6">
+
+  <header class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div class="ml-4">
+      <h2 class="text-2xl font-bold text-light-text dark:text-dark-text">Batch Enrollments</h2>
+      <p class="text-gray-600 dark:text-gray-400 mt-1">
+        Manage and organize learning batches
+      </p>
+    </div>
+
+    <div class="flex items-center gap-3">
+
+      <select
+        class="rounded-lg border w-50 border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none">
+        <option value="">All Status</option>
+        <option value="true">Active</option>
+        <option value="false">Inactive</option>
+      </select>
+
+      <button (click)="addEditEnrollment(undefined)"
+        class="flex items-center gap-2 rounded-lg bg-[#003B73] px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-indigo-200 transition hover:bg-[#356fa6]">
+        <fa-icon [icon]="faPlus"></fa-icon>
+        Add New Enrollment
+      </button>
+
+    </div>
+  </header>
+
+  <div class="card overflow-hidden">
+    <table class="w-full border-collapse">
+      <thead class="bg-[#356fa6] text-white border-b border-slate-200">
+        <tr>
+          <th class="text-left py-4 px-6 font-semibold text-sm">
+            <fa-icon [icon]="faHashtag" class="text-sm"></fa-icon>ID
+          </th>
+          <th class="text-left py-4 px-6 font-semibold text-sm">
+            <fa-icon [icon]="faTag" class="mr-2 text-sm"></fa-icon>Batch Details
+          </th>
+          <th class="text-left py-4 px-6 font-semibold text-sm">
+            <fa-icon [icon]="faUser" class="mr-2 text-sm"></fa-icon>Candidate Details
+          </th>
+          <th class="text-left py-4 px-6 font-semibold text-sm">
+            <fa-icon [icon]="faCalendar" class="mr-2 text-sm"></fa-icon>Enrollment Date
+          </th>
+          <th class="text-left py-4 px-6 font-semibold text-sm">
+            <fa-icon [icon]="faToggleOn" class="mr-2 text-sm"></fa-icon>Status
+          </th>
+          <th class="text-center py-4 px-6 font-semibold text-sm">
+            <fa-icon [icon]="faCog" class="mr-2 text-sm"></fa-icon>Actions
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (item of enrollService.enrollmentList(); track $index) {
+        <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+
+          <td class="px-6 py-4 text-sm font-medium text-slate-500">
+            #{{ $index + 1 }}
+          </td>
+
+          <td class="px-6 py-4">
+            <div class="font-semibold text-slate-800">
+              {{ item.batchId.batchName! }}
+            </div>
+          </td>
+          <td class="px-6 py-4">
+            <div class="font-semibold text-slate-800">
+              {{ item.candidateId.fullName }}
+            </div>
+          </td>
+          <td class="px-6 py-4">
+            <div class="font-semibold text-slate-800">
+              {{ item.enrollmentDate | date: 'MMM d, y' }}
+            </div>
+          </td>
+
+          <td class="px-6 py-4">
+            <span [ngClass]="item.isActive | status" class="inline-flex items-center gap-1 text-sm font-medium">
+              <fa-icon [icon]="item.isActive ? faCheckCircle : faTimesCircle">
+              </fa-icon>
+              {{ item.isActive ? 'Active' : 'Inactive' }}
+            </span>
+          </td>
+
+          <td class="px-6 py-4">
+            <div class="flex justify-center gap-4">
+            
+              <button type="button" title="Edit" class="flex h-9 w-9 items-center justify-center rounded-full
+                       hover:bg-amber-100 transition" (click)="addEditEnrollment(item._id)">
+                <fa-icon [icon]="faEdit" class="text-amber-600"></fa-icon>
+              </button>
+
+              <button type="button" title="Delete" class="flex h-9 w-9 items-center justify-center rounded-full
+                       hover:bg-red-100 transition" (click)="deleteEnrollment(item)">
+                <fa-icon [icon]="faTrash" class="text-red-600"></fa-icon>
+              </button>
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

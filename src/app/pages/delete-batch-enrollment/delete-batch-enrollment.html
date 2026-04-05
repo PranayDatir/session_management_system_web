@@ -1,0 +1,18 @@
+<div class="p-8">
+    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <fa-icon [icon]="faTrashAlt" class="text-3xl text-red-500"></fa-icon>
+    </div>
+    <h3 class="text-center text-xl font-semibold text-slate-800 mb-2">Delete Batch Enrollment</h3>
+    <p class="text-slate-500 mb-6">Are you sure you want to delete <strong
+            class="text-slate-700">"{{object.candidateId.fullName}}" </strong>Enrollment ?
+        This action cannot be undone.</p>
+    <div class="flex gap-3">
+        <button type="button" class="flex-1 btn-secondary bg-slate-200 rounded-lg mr-2 text-sm justify-center py-2.5 cursor-pointer" (click)="dialogRef.close(false)">
+                <fa-icon [icon]="faTimes"></fa-icon> Cancel
+            </button>
+        <button (click)="deleteBatch(object._id!)"
+            class="flex-1 px-5 py-3 rounded-lg bg-red-500 text-white font-medium hover:bg-red-600 transition-colors">
+            <fa-icon [icon]="faTrashAlt" class="mr-2"></fa-icon>Delete
+        </button>
+    </div>
+</div>

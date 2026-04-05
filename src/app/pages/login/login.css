@@ -1,0 +1,4 @@
+.curved-edge {
+            border-top-right-radius: 50% 100%;
+            border-bottom-right-radius: 50% 100%;
+        }

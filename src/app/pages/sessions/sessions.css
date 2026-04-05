@@ -1,0 +1,15 @@
+  .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+  }
+
+  .breadcrumb-item {
+      color: #666;
+      font-size: 0.875rem;
+  }
+
+  .breadcrumb-item.active {
+      color: #4F46E5;
+      font-weight: 600;
+  }

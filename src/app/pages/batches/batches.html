@@ -1,0 +1,130 @@
+<div class="min-h-screen bg-slate-150 p-6 space-y-6">
+  <header class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div class="ml-4">
+      <h2 class="text-2xl font-bold text-light-text dark:text-dark-text">Batches</h2>
+      <p class="text-gray-600 dark:text-gray-400 mt-1">
+        Manage and organize learning batches
+      </p>
+    </div>
+
+    <div class="flex items-center gap-3">
+
+      <!-- <div class="relative">
+        <fa-icon [icon]="faSearch" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">
+        </fa-icon>
+        <input type="text" placeholder="Search batches..."
+          class="w-64 rounded-lg border border-slate-300 bg-white pl-10 pr-4 py-2.5 text-sm text-slate-700 shadow-sm transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none" />
+      </div> -->
+
+      <select (change)="onFilterChange($event)"
+        class="rounded-lg border w-50 border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none">
+        <option value="">All Status</option>
+        <option value="true">Active</option>
+        <option value="false">Inactive</option>
+      </select>
+
+      <button (click)="addEditBatch(undefined)"
+        class="flex items-center gap-2 rounded-lg bg-[#003B73] px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-indigo-200 transition hover:bg-[#356fa6]">
+        <fa-icon [icon]="faPlus"></fa-icon>
+        Add New Batch
+      </button>
+
+    </div>
+  </header>
+
+  <div class="card overflow-hidden">
+    <table class="w-full border-collapse">
+      <thead class="bg-[#356fa6] text-white border-b border-slate-200">
+        <tr>
+          <th class="text-left py-4 px-6 font-semibold text-sm">
+            <fa-icon [icon]="faHashtag" class="text-sm"></fa-icon>ID
+          </th>
+          <th class="text-left py-4 px-6 font-semibold text-sm">
+            <fa-icon [icon]="faTag" class="mr-2 text-sm"></fa-icon>Batch Details
+          </th>
+          <th class="text-left py-4 px-6 font-semibold text-sm">
+            <fa-icon [icon]="faCalendar" class="mr-2 text-sm"></fa-icon>Duration
+          </th>
+          <th class="text-left py-4 px-6 font-semibold text-sm">
+            <fa-icon [icon]="faToggleOn" class="mr-2 text-sm"></fa-icon>Status
+          </th>
+          <th class="text-center py-4 px-6 font-semibold text-sm">
+            <fa-icon [icon]="faCog" class="mr-2 text-sm"></fa-icon>Actions
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (item of paginatedBatches(); track $index) {
+        <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+
+          <!-- Index -->
+          <td class="px-6 py-4 text-sm font-medium text-slate-500">
+            #{{ (currentPage() - 1) * pageSize() + $index + 1 }}
+          </td>
+
+          <!-- Batch Info -->
+          <td class="px-6 py-4">
+            <div class="font-semibold text-slate-800">
+              {{ item.batchName }}
+            </div>
+            <div class="mt-0.5 max-w-xs truncate text-xs text-slate-500">
+              {{ item.description }}
+            </div>
+          </td>
+
+          <!-- Dates -->
+          <td class="px-6 py-4 text-sm text-slate-600">
+            <div class="flex items-center gap-2">
+              <span class="text-gray-500">
+                <fa-icon [icon]="faCalendarAlt" class="mr-1"></fa-icon>
+                {{ item.startDate | date: 'MMM d, y' }}
+              </span>
+              <span class="text-slate-300">→</span>
+              <span class="text-gray-500">
+                {{ item.endDate | date: 'MMM d, y' }}
+              </span>
+            </div>
+          </td>
+
+          <!-- Status -->
+          <td class="px-6 py-4">
+            <span [ngClass]="item.isActive | status" class="inline-flex items-center gap-1 text-sm font-medium">
+              <fa-icon [icon]="item.isActive ? faCheckCircle : faTimesCircle">
+              </fa-icon>
+              {{ item.isActive ? 'Active' : 'Inactive' }}
+            </span>
+          </td>
+
+          <!-- Actions -->
+          <td class="px-6 py-4">
+            <div class="flex justify-center gap-4">
+              <button type="button" title="View" (click)="viewSessions(item)" class="flex h-9 w-9 items-center justify-center rounded-full
+                       hover:bg-indigo-100 transition">
+                <fa-icon [icon]="faEye" class="text-indigo-600"></fa-icon>
+              </button>
+
+              <button type="button" title="Edit" (click)="addEditBatch(item)" class="flex h-9 w-9 items-center justify-center rounded-full
+                       hover:bg-amber-100 transition">
+                <fa-icon [icon]="faEdit" class="text-amber-600"></fa-icon>
+              </button>
+
+              <button type="button" title="Delete" (click)="deleteBatch(item)" class="flex h-9 w-9 items-center justify-center rounded-full
+                       hover:bg-red-100 transition">
+                <fa-icon [icon]="faTrash" class="text-red-600"></fa-icon>
+              </button>
+            </div>
+          </td>
+
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  @if(batcheService.batchData().length > pageSize() ){
+  <div class=" flex justify-center">
+        <pagination [totalItems]="batcheService.batchData().length" [pageSize]="pageSize()"
+            [currentPage]="currentPage()" (pageChange)="onPageChange($event)">
+        </pagination>
+    </div>}
+</div>
