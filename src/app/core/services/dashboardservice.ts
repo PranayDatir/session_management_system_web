@@ -24,6 +24,7 @@ export class Dashboardservice {
       },
       error: (error) => {
         console.error('Error fetching candidate dashboard data:', error);
+        this.notify.show('error', 'Internal Server Error');
       }
     });
   }
@@ -45,9 +46,11 @@ export class Dashboardservice {
     this.http.get<IApiResponse<IBatchCandidateStats[]>>(ApiRoutes.ALL_BATCH_CANDIDATE_STATS).subscribe({
       next: (response: IApiResponse<IBatchCandidateStats[]>) => {
         this.batchCandidateStats.set(response.data!);
+        this.notify.show('success', response.message);
       },
       error: (error) => {
         console.error('Error fetching all batch candidate stats:', error);
+        this.notify.show('error', 'Internal Server Error');
       }
     });
   }

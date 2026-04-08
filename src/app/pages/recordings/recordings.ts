@@ -32,7 +32,7 @@ export class Recordings implements OnInit {
   faTrash = faTrash;
 
   currentPage = signal(1);
-  pageSize = signal(5);
+  pageSize = signal(8);
   constructor(public dialog: MatDialog) { }
   batch: any;
   ngOnInit() {

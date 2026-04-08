@@ -5,14 +5,15 @@ import { IUser } from '../models/Candidate';
 import { Http } from './http';
 import { IBatchSession } from '../models/BatchSession';
 import { BehaviorSubject } from 'rxjs';
+import { Notify } from './notify';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Sessionservice {
-  
-  http = inject(Http);
 
+  http = inject(Http);
+  notify = inject(Notify)
   sessionsList = signal<IBatchSession[]>([]);
   allSessionsListByBatch = signal<IBatchSession[]>([]);
   sessionsListByBatch = signal<IBatchSession[]>([]);
@@ -22,10 +23,13 @@ export class Sessionservice {
       next: (res: IApiResponse<IBatchSession[]>) => {
         if (res.result) {
           this.sessionsList.set(res.data!);
+          this.notify.show('success', res.message);
+        } else {
+          this.notify.show('info', res.message);
         }
       },
       error: (err) => {
-        console.log(err);
+        console.log(err);this.notify.show('error', 'Internal Server Error');
       },
       complete: () => {
         console.log('complete');
@@ -38,10 +42,13 @@ export class Sessionservice {
       next: (res: IApiResponse<IBatchSession>) => {
         if (res.result) {
           cb(res.data!);
+          this.notify.show('success', res.message);
+        } else {
+          this.notify.show('info', res.message);
         }
       },
       error: (err) => {
-        console.log(err);
+        console.log(err);this.notify.show('error', 'Internal Server Error');
       },
       complete: () => {
         console.log('complete');
@@ -56,10 +63,14 @@ export class Sessionservice {
         if (res.result) {
           this.sessionsListByBatch.set(res.data!);
           this.allSessionsListByBatch.set(res.data!);
+          this.notify.show('success', res.message);
+        } else {
+          this.notify.show('info', res.message);
         }
       },
       error: (err) => {
         console.log(err);
+        this.notify.show('error', 'Internal Server Error');
       },
       complete: () => {
         console.log('complete');
@@ -68,15 +79,19 @@ export class Sessionservice {
   }
 
   addEditSession(session: IBatchSession, callback: () => void) {
-    if (session._id ===undefined) {
+    if (session._id === undefined) {
       this.http.post<IApiResponse<IBatchSession>>(ApiRoutes.BATCHSESSIONS, session).subscribe({
         next: (res: IApiResponse<IBatchSession>) => {
           if (res.result) {
             callback();
+            this.notify.show('success', res.message);
+          } else {
+            this.notify.show('info', res.message);
           }
         },
         error: (err) => {
           console.log(err);
+          this.notify.show('error', 'Internal Server Error');
         },
         complete: () => {
           console.log('complete');
@@ -87,10 +102,14 @@ export class Sessionservice {
         next: (res: IApiResponse<IBatchSession>) => {
           if (res.result) {
             callback();
+            this.notify.show('success', res.message);
+          } else {
+            this.notify.show('info', res.message);
           }
         },
         error: (err) => {
           console.log(err);
+          this.notify.show('error', 'Internal Server Error');
         },
         complete: () => {
           console.log('complete');
@@ -102,10 +121,16 @@ export class Sessionservice {
   deleteSessionByID(sessionId: string, callback?: () => void) {
     this.http.delete<IApiResponse<IBatchSession>>(ApiRoutes.BATCHSESSIONS, sessionId).subscribe({
       next: (res: IApiResponse<IBatchSession>) => {
-        if (res.result == true) { callback?.(); }
+        if (res.result == true) {
+          callback?.();
+          this.notify.show('success', res.message);
+        } else {
+          this.notify.show('info', res.message);
+        }
       },
       error: (err) => {
         console.log(err);
+        this.notify.show('error', 'Internal Server Error');
       },
       complete: () => {
         console.log('complete');
