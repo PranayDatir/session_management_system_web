@@ -50,7 +50,7 @@
 }@else if(authUser.user.role === 'Candidate') {
 <div class="grid grid-cols-4 gap-5">
   @for (item of paginatedCandidateBatches(); track $index) {
-  <div [routerLink]="`/layout/batchSessions/recording/${item._id}`" [state]="{ batch: item }" class="inline-flex items-center justify-center h-16
+  <div [routerLink]="`/layout/batchSessions/recording/${item.batchId._id}`" [state]="{ batch: item }" class="inline-flex items-center justify-center h-16
                 px-4 py-1.5
                 rounded-md
                 bg-orange-100

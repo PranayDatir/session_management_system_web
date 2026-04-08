@@ -3,6 +3,7 @@ import { Http } from './http';
 import { IBatchEnrollment } from '../models/BatchEnrollment';
 import { ApiRoutes } from '../constants/ApiRoutes';
 import { IApiResponse } from '../Interfaces/ApiResponse';
+import { Notify } from './notify';
 
 @Injectable({
   providedIn: 'root',
@@ -10,6 +11,7 @@ import { IApiResponse } from '../Interfaces/ApiResponse';
 export class BatchEnrollmentService {
 
   http = inject(Http);
+  notify = inject(Notify);
 
   addEditEnrollForm(enrollform: IBatchEnrollment, callback: () => void) {
       if(enrollform._id !== undefined) {
@@ -18,9 +20,11 @@ export class BatchEnrollmentService {
           if (res.result) {
             callback();
           }
+           this.notify.show('success', res.message);
         },
         error: (err) => {
           console.log(err);
+          this.notify.show('error', 'Internal Server Error');
         },
         complete: () => {
           console.log('complete');
@@ -32,9 +36,11 @@ export class BatchEnrollmentService {
           if (res.result) {
             callback();
           }
+           this.notify.show('success', res.message);
         },
         error: (err) => {
           console.log(err);
+          this.notify.show('error', 'Internal Server Error');
         },
         complete: () => {
           console.log('complete');
@@ -55,9 +61,11 @@ export class BatchEnrollmentService {
           this.enrollmentList.set(res.data!);
           this.allEnrollmentList.set(res.data!);
         }
+        this.notify.show('success', res.message);
       },
       error: (err) => {
         console.log(err);
+        this.notify.show('error', 'Internal Server Error');
       },
       complete: () => {
         console.log('complete');
@@ -71,9 +79,11 @@ export class BatchEnrollmentService {
           if (res.result) {
             cb(res.data!);
           }
+          this.notify.show('success', res.message);
         },
         error: (err) => {
           console.log(err);
+          this.notify.show('error', 'Internal Server Error');
         },
         complete: () => {
           console.log('complete');
@@ -87,9 +97,11 @@ export class BatchEnrollmentService {
           if (res.result) {
             this.enrollmentListByCandidateID.set(res.data!);
           }
+          this.notify.show('success', res.message);
         },
         error: (err) => {
           console.log(err);
+          this.notify.show('error', 'Internal Server Error');
         },
         complete: () => {
           console.log('complete');
@@ -103,9 +115,11 @@ export class BatchEnrollmentService {
           if (res.result) {
             callback();
           }
+          this.notify.show('success', res.message);
         },
         error: (err) => {
           console.log(err);
+          this.notify.show('error', 'Internal Server Error');
         },
         complete: () => {
           console.log('complete');
